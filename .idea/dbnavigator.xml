@@ -19,15 +19,22 @@
     <connection id="4fe75073-ee50-4acd-a9cc-d7faee41d86c">
       <console name="Connection" type="STANDARD" schema="" session="Main" />
     </connection>
+    <connection id="30c22560-0ebd-46ef-a602-dae817ab29f2">
+      <console name="Connection 1" type="STANDARD" schema="" session="Main" />
+    </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="30c22560-0ebd-46ef-a602-dae817ab29f2" object-ref="schemas/main/tables/all_user_words" />
+      <object connection-id="30c22560-0ebd-46ef-a602-dae817ab29f2" object-ref="schemas/main/tables/prompts" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="4fe75073-ee50-4acd-a9cc-d7faee41d86c" />
+    <connection id="30c22560-0ebd-46ef-a602-dae817ab29f2" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="4fe75073-ee50-4acd-a9cc-d7faee41d86c" dataset="main.prompts" active-filter-id="ca803ce0-db96-4b6a-8e21-6a51945f60bb">
@@ -42,6 +49,31 @@
     </filter-actions>
     <filter-actions connection-id="4fe75073-ee50-4acd-a9cc-d7faee41d86c" dataset="main.limits" active-filter-id="e7089009-c487-4fb3-beb4-7297cf457de6">
       <filter id="e7089009-c487-4fb3-beb4-7297cf457de6" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="30c22560-0ebd-46ef-a602-dae817ab29f2" dataset="main.prompts" active-filter-id="89a80b17-f261-46b7-9c82-2745a7480f80">
+      <filter id="89a80b17-f261-46b7-9c82-2745a7480f80" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="30c22560-0ebd-46ef-a602-dae817ab29f2" dataset="main.tests" active-filter-id="ea89d752-804d-4bc0-b16b-81b597e14be0">
+      <filter id="ea89d752-804d-4bc0-b16b-81b597e14be0" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="30c22560-0ebd-46ef-a602-dae817ab29f2" dataset="main.user_words" active-filter-id="ec95df26-75dc-426d-aab2-eb80cb1af2e9">
+      <filter id="ec95df26-75dc-426d-aab2-eb80cb1af2e9" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="30c22560-0ebd-46ef-a602-dae817ab29f2" dataset="main.limits" active-filter-id="d82a96f6-f06c-4311-8284-a8bdbe6e55e4">
+      <filter id="d82a96f6-f06c-4311-8284-a8bdbe6e55e4" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="30c22560-0ebd-46ef-a602-dae817ab29f2" dataset="main.all_user_words" active-filter-id="26903a0e-5371-460f-8095-4fc87ca1b3ac">
+      <filter id="26903a0e-5371-460f-8095-4fc87ca1b3ac" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="is not null" value="" active="true" />
       </filter>
     </filter-actions>
@@ -70,6 +102,103 @@
           <tns-profile value="" />
           <files>
             <file path="C:\Users\ps\PycharmProjects\hackathon\database.db" schema="main" />
+          </files>
+          <type value="NONE" />
+          <user value="" />
+          <deprecated-pwd value="" />
+        </database>
+        <properties>
+          <auto-commit value="true" />
+        </properties>
+        <ssh-settings>
+          <active value="false" />
+          <proxy-host value="" />
+          <proxy-port value="22" />
+          <proxy-user value="" />
+          <deprecated-proxy-pwd value="" />
+          <auth-type value="PASSWORD" />
+          <key-file value="" />
+          <key-passphrase value="" />
+        </ssh-settings>
+        <ssl-settings>
+          <active value="false" />
+          <certificate-authority-file value="" />
+          <client-certificate-file value="" />
+          <client-key-file value="" />
+        </ssl-settings>
+        <details>
+          <charset value="UTF-8" />
+          <session-management value="true" />
+          <ddl-file-binding value="true" />
+          <database-logging value="true" />
+          <connect-automatically value="true" />
+          <restore-workspace value="true" />
+          <restore-workspace-deep value="false" />
+          <environment-type value="default" />
+          <connectivity-timeout value="30" />
+          <idle-time-to-disconnect value="30" />
+          <idle-time-to-disconnect-pool value="5" />
+          <credential-expiry-time value="10" />
+          <max-connection-pool-size value="7" />
+          <alternative-statement-delimiter value="" />
+        </details>
+        <debugger>
+          <compile-dependencies value="true" />
+          <tcp-driver-tunneling value="false" />
+          <tcp-host-address value="" />
+          <tcp-port-from value="4000" />
+          <tcp-port-to value="4999" />
+          <debugger-type value="JDBC" />
+        </debugger>
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false" hide-audit-columns="false">
+          <object-type-filter use-master-settings="true">
+            <object-type name="SCHEMA" enabled="true" />
+            <object-type name="USER" enabled="true" />
+            <object-type name="ROLE" enabled="true" />
+            <object-type name="PRIVILEGE" enabled="true" />
+            <object-type name="CHARSET" enabled="true" />
+            <object-type name="TABLE" enabled="true" />
+            <object-type name="VIEW" enabled="true" />
+            <object-type name="MATERIALIZED_VIEW" enabled="true" />
+            <object-type name="NESTED_TABLE" enabled="true" />
+            <object-type name="COLUMN" enabled="true" />
+            <object-type name="INDEX" enabled="true" />
+            <object-type name="CONSTRAINT" enabled="true" />
+            <object-type name="DATASET_TRIGGER" enabled="true" />
+            <object-type name="DATABASE_TRIGGER" enabled="true" />
+            <object-type name="SYNONYM" enabled="true" />
+            <object-type name="SEQUENCE" enabled="true" />
+            <object-type name="PROCEDURE" enabled="true" />
+            <object-type name="FUNCTION" enabled="true" />
+            <object-type name="PACKAGE" enabled="true" />
+            <object-type name="TYPE" enabled="true" />
+            <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+            <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="DIMENSION" enabled="true" />
+            <object-type name="CLUSTER" enabled="true" />
+            <object-type name="DBLINK" enabled="true" />
+          </object-type-filter>
+          <object-name-filters />
+        </object-filters>
+      </connection>
+      <connection id="30c22560-0ebd-46ef-a602-dae817ab29f2" active="true" signed="true">
+        <database>
+          <name value="Connection 1" />
+          <description value="" />
+          <database-type value="SQLITE" />
+          <config-type value="BASIC" />
+          <database-version value="3.44" />
+          <driver-source value="BUNDLED" />
+          <driver-library value="" />
+          <driver value="" />
+          <url-type value="FILE" />
+          <host value="" />
+          <port value="" />
+          <database value="" />
+          <tns-folder value="" />
+          <tns-profile value="" />
+          <files>
+            <file path="C:\Users\ps\PycharmProjects\hackathon\project\database.db" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
