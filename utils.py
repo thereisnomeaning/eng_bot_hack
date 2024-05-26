@@ -9,6 +9,9 @@ def get_markdownv2_text(input_text):
             output_text += i
     return output_text
 
+def get_markdownv1_text(input_text):
+    input_text.replace('/ [_ * [\]() ~` >  # \+\-=|{}.!]/g', '\\$&')
+    return input_text
 # Варварским способом получаем слово из сообщения, которое конструирует функция translate
 def get_word(message):
     return message.split()[2]

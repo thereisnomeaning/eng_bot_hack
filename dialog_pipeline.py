@@ -2,7 +2,7 @@ from validation import (is_stt_blocks_limit_per_person, is_stt_blocks_limit_per_
                         is_gpt_tokens_limit_per_person,
                         is_tts_symbol_limit_per_person)
 from gpt import check_and_create_IEM_token, gpt
-from project.config import IEM_TOKEN_INFO, SYSTEM_PROMPT, SYSTEM_PROMPT_TRANSLATION
+from config import IEM_TOKEN_INFO, SYSTEM_PROMPT, SYSTEM_PROMPT_TRANSLATION
 from speechkit import speech_to_text, text_to_speech
 from database import get_user_prompts, get_last_message_and_translation
 import logging

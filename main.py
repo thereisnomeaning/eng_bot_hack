@@ -397,12 +397,19 @@ def callback_handler(call: CallbackQuery):
         text = get_markdownv2_text(text)
         # Если мы получили перевод и произношение
         if text and audio:
-            message = bot.send_audio(user_id, audio=audio, caption=text, reply_markup=markup, parse_mode='MarkdownV2',
-                                     title=word_to_show, performer='English_team_hack')
+            try:
+                message = bot.send_audio(user_id, audio=audio, caption=text, reply_markup=markup, parse_mode='MarkdownV2',
+                                         title=word_to_show, performer='English_team_hack')
+            except:
+                message = bot.send_audio(user_id, audio=audio, caption=text, reply_markup=markup,
+                                         title=word_to_show, performer='English_team_hack')
             add_level_user_words_info(user_id, level, f'Start, {num_of_word}, {amount_of_learned}, {message.message_id}')
         # Если мы получили только перевод
         elif text:
-            message = bot.send_photo(user_id, photo=image, caption=text, reply_markup=markup, parse_mode='MarkdownV2')
+            try:
+                message = bot.send_photo(user_id, photo=image, caption=text, reply_markup=markup, parse_mode='MarkdownV2')
+            except:
+                message = bot.send_photo(user_id, photo=image, caption=text, reply_markup=markup)
             add_level_user_words_info(user_id, level, f'Start, {num_of_word}, {amount_of_learned}, {message.message_id}')
         # Если мы не получили ни перевода, ни произношения
         else:
@@ -480,14 +487,27 @@ def callback_handler(call: CallbackQuery):
         if text and audio:
             #bot.send_audio(user_id, audio=audio, caption=text, reply_markup=markup)
             # Тут короче манипуляция с кнопками.
-            new_audio = InputMediaAudio(media=audio, caption=text, title=word_to_show, performer='Englsh_team_hack',
-                                        parse_mode='MarkdownV2')
-            message = bot.edit_message_media(media=new_audio, chat_id=user_id,
-                                             message_id=message_id, reply_markup=markup)
+            try:
+                new_audio = InputMediaAudio(media=audio, caption=text, title=word_to_show, performer='Englsh_team_hack',
+                                            parse_mode='MarkdownV2')
+                message = bot.edit_message_media(media=new_audio, chat_id=user_id,
+                                                 message_id=message_id, reply_markup=markup)
+            except:
+                new_audio = InputMediaAudio(media=audio, caption=text, title=word_to_show, performer='Englsh_team_hack'
+                                            )
+                message = bot.edit_message_media(media=new_audio, chat_id=user_id,
+                                                 message_id=message_id, reply_markup=markup)
+
             add_level_user_words_info(user_id, level, f'Start, {num_of_word}, {amount_of_learned}, {message.message_id}')
+
         elif text:
-            image_to_sent = InputMediaPhoto(media=image, caption=text, parse_mode='MarkdownV2')
-            message1 = bot.edit_message_media(media=image_to_sent, chat_id=user_id, message_id=message_id, reply_markup=markup)
+            try:
+                image_to_sent = InputMediaPhoto(media=image, caption=text, parse_mode='MarkdownV2')
+                message1 = bot.edit_message_media(media=image_to_sent, chat_id=user_id, message_id=message_id, reply_markup=markup)
+            except:
+                image_to_sent = InputMediaPhoto(media=image, caption=text)
+                message1 = bot.edit_message_media(media=image_to_sent, chat_id=user_id, message_id=message_id,
+                                                  reply_markup=markup)
             add_level_user_words_info(user_id, level, f'Start, {num_of_word}, {amount_of_learned}, {message1.message_id}')
         else:
             bot.send_message(user_id, '⛔ Возникла ошибка ⛔')
@@ -588,7 +608,10 @@ def callback_handler(call: CallbackQuery):
         # maybe need to clear addition words
         markup = inline_menu_keyboard([['🔃 Еще повторить', 'not_learned_word_yet'],
                                        ['✅ Уже знаю', 'learned_word']], rows=2)
-        message = bot.send_message(user_id, f'{word}\n||{translation}||', reply_markup=markup, parse_mode='MarkdownV2')
+        try:
+            message = bot.send_message(user_id, f'{word}\n||{translation}||', reply_markup=markup, parse_mode='MarkdownV2')
+        except:
+            message = bot.send_message(user_id, f'{word}\n{translation}', reply_markup=markup)
         update_repeat_words_id(user_id, message.message_id)
     # Если пользователь еще не выучил слово и хочет в будущем его повторить, или же пользователь выучил его и не надо
     # это слово больше показывать.
@@ -639,8 +662,12 @@ def callback_handler(call: CallbackQuery):
         word = get_markdownv2_text(word)
         markup = inline_menu_keyboard([['🔃 Еще повторить', 'not_learned_word_yet'],
                                        ['✅ Уже знаю', 'learned_word']], rows=2)
-        bot.edit_message_text(chat_id=user_id, message_id=call.message.message_id,
+        try:
+            bot.edit_message_text(chat_id=user_id, message_id=call.message.message_id,
                               text=f'{word}\n||{translation}||', reply_markup=markup, parse_mode='MarkdownV2')
+        except:
+            bot.edit_message_text(chat_id=user_id, message_id=call.message.message_id,
+                                  text=f'{word}\n{translation}', reply_markup=markup)
 
     elif call.data == "print_list":
         try:
@@ -657,6 +684,9 @@ def callback_handler(call: CallbackQuery):
 
     # Дальше идет код для кнопочек диалога
     elif call.data == 'dialog':
+        if get_start_dialog(user_id) == 'True':
+            bot.send_message(user_id, 'Вы уже начали диалог, если хотите его завершить, то введите /stop_dialog')
+            return
         try:
             bot.delete_message(chat_id=user_id, message_id=call.message.message_id)
         except:
@@ -705,14 +735,20 @@ def callback_handler(call: CallbackQuery):
             bot.send_message(user_id, 'Here we go!!!\nВы сможете завершить диалог в любой момент командой /stop_dialog')
             bot.send_voice(user_id, output)
             text = get_markdownv2_text(initial_text)
-            bot.send_message(user_id, f'"""||{text}||"""', parse_mode='MarkdownV2', reply_markup=markup)
+            try:
+                bot.send_message(user_id, f'"""||{text}||"""', parse_mode='MarkdownV2', reply_markup=markup)
+            except:
+                bot.send_message(user_id, text, reply_markup=markup)
         # Если пользователь уперся в лимит токенов
         elif status == 'LIMITS':
             markup = menu_keyboard(['✍ Перевести на русский'])
             bot.send_message(output)
             bot.send_message(user_id, 'Here we go!!!\nВы сможете завершить диалог в любой момент командой /stop_dialog')
             text = get_markdownv2_text(initial_text)
-            bot.send_message(user_id, f'"""||{text}||"""', parse_mode='MarkdownV2', reply_markup=markup)
+            try:
+                bot.send_message(user_id, f'"""||{text}||"""', parse_mode='MarkdownV2', reply_markup=markup)
+            except:
+                bot.send_message(user_id, text, reply_markup=markup)
             return
         # Если мы получили ошибку с нейронкой
         elif status == 'IEM_ERROR':
@@ -781,7 +817,7 @@ def chatting(message: Message):
             text = output
             update_amount_of_secs(user_id, message.voice.duration)
             update_stt_blocks_in_limits(user_id, ceil(message.voice.duration / 15))
-        elif status in ['LIMIT', 'IEM_ERROR', 'STT_ERROR']:
+        else:
             bot.send_message(user_id, output)
             return
         # Если у нас не получилось расшифровать голосовое с помощью английского расшифровщика, то это либо пользователь
@@ -794,7 +830,7 @@ def chatting(message: Message):
                 text = output
                 update_amount_of_secs(user_id, message.voice.duration)
                 update_stt_blocks_in_limits(user_id, ceil(message.voice.duration / 15))
-            elif status in ['LIMIT', 'IEM_ERROR', 'STT_ERROR']:
+            else:
                 bot.send_message(user_id, output)
                 return
         # Если и русский расшифровщик ничего не понял, то мы выдаем сообщение пользователю
@@ -814,7 +850,7 @@ def chatting(message: Message):
         update_gpt_tokens_in_limits(user_id, tokens)
         session_id = get_last_session(user_id)
         insert_row_into_prompts((user_id, "assistant", gpt_text, session_id))
-    elif status in ['IEM_ERROR', 'LIMIT', 'TTT_ERROR']:
+    else:
         bot.send_message(user_id, gpt_text)
         return
 
@@ -826,9 +862,12 @@ def chatting(message: Message):
 
         bot.send_voice(user_id, output)
         text = get_markdownv2_text(gpt_text)
-        bot.send_message(user_id, f'"""||{text}||"""', parse_mode='MarkdownV2', reply_markup=markup)
+        try:
+            bot.send_message(user_id, f'"""||{text}||"""', parse_mode='MarkdownV2', reply_markup=markup)
+        except:
+            bot.send_message(user_id, text, reply_markup=markup)
 
-    elif status in ['LIMITS', 'IEM_ERROR', 'TTS_ERROR']:
+    else:
         bot.send_message(user_id, gpt_text)
         bot.send_message(user_id, output, reply_markup=markup)
 
