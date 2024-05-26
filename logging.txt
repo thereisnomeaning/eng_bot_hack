@@ -1,0 +1,2 @@
+2024-05-26 02:49:46,104 - root - INFO - Tables are created
+2024-05-26 02:49:49,182 - root - INFO - New user_id 719301881 just connected
