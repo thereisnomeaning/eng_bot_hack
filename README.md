@@ -30,7 +30,7 @@
 
 ## Инструкции по использованию
 - Начать пользование:
-  - Найди бота в Telegram: @eng_hac_bot или [по ссылке](https://t.me/eng_hac_bot).
+  - Найди бота в Telegram: @english_helper_yeah_bot или [по ссылке](https://t.me/english_helper_yeah_bot).
   - Запусти бота командой /start.
   - Введи команду /help
 - Нажав /menu, вы можете воспользоваться тестами, диалогом и вокабуляром.
