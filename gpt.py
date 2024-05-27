@@ -1,15 +1,19 @@
 import requests
 import time
 import logging
-from config import TOKENIZER, GPT, IEM_TOKEN_INFO, IEM
-
-logger = logging.getLogger('__main__')
+import json
+from config import IAM_TOKEN, FOLDER_ID
 
 
 # Подсчитываем количество токенов в сообщении.
 def gpt_tokenizer(user_prompt, sys_prompt):
-    data = TOKENIZER.data.copy()
-
+    url = 'https://llm.api.cloud.yandex.net/foundationModels/v1/tokenizeCompletion'
+    with open(FOLDER_ID, 'r') as file:
+        data = {
+            "modelUri": f"gpt://{file.read()}/yandexgpt/latest",
+            "maxTokens": 200,
+            "messages": []
+        }
     data["messages"].append(
         {
             "role": 'user',
@@ -23,9 +27,15 @@ def gpt_tokenizer(user_prompt, sys_prompt):
                 "text": sys_prompt
             }
         )
-
+    with open(IAM_TOKEN, 'r') as f:
+        file_data = json.load(f)
+        iam_token = file_data["access_token"]
+        headers = {
+            'Authorization': f'Bearer {iam_token}',
+            'Content-Type': 'application/json'
+        }
     try:
-        return True, len(requests.post(url=TOKENIZER.url, headers=TOKENIZER.headers, json=data).json()['tokens'])
+        return True, len(requests.post(url=url, headers=headers, json=data).json()['tokens'])
     except Exception as e:
         logging.error(f'Error occured in gpt tokenizer')
         return False, None
@@ -33,13 +43,33 @@ def gpt_tokenizer(user_prompt, sys_prompt):
 
 # Отправляем промт модели.
 def gpt(user_prompt, sys_prompt=None):
-    data = GPT.data.copy()
-    data['messages'] = [{'role': 'system', 'text': sys_prompt}]
+    url = 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion'
+    with open(FOLDER_ID) as file:
+        data = {
+            "modelUri": f"gpt://{file.read()}/yandexgpt/latest",  # модель для генерации текста
+            "completionOptions": {
+                "stream": False,  # потоковая передача частично сгенерированного текста выключена
+                "temperature": 0.3,  # чем выше значение этого параметра, тем более креативными будут ответы модели (0-1)
+                "maxTokens": "100"  # максимальное число сгенерированных токенов
+            },
+            "messages": [
+                {
+                    "role": "system",
+                    "text": sys_prompt
+                }
+            ]
+        }
 
     for i in user_prompt:
         data['messages'].append(i)
-
-    response = requests.post(url=GPT.url, headers=GPT.headers, json=data)
+    with open(IAM_TOKEN, 'r') as f:
+        file_data = json.load(f)
+        iam_token = file_data["access_token"]
+        headers = {
+            'Authorization': f'Bearer {iam_token}',
+            'Content-Type': 'application/json'}
+    response = requests.post(url=url, headers=headers, json=data)
+    print(response)
     if response.status_code < 200 or response.status_code >= 300:
         return False, f'Error code {response.status_code}'
     try:
@@ -54,22 +84,4 @@ def gpt(user_prompt, sys_prompt=None):
     return True, result
 
 
-# Проверяем и создаем, если это необходимо, IEM токен.
-def check_and_create_IEM_token(TOKEN_EXPIRES_IN):
-    if TOKEN_EXPIRES_IN <= time.time():
-        try:
-            response = requests.get(url=IEM.metadata_url, headers=IEM.headers)
-            if response.status_code == 200:
-                token_data = response.json()
-                IEM_TOKEN_INFO["IEM_TOKEN"] = token_data['access_token']
-                IEM_TOKEN_INFO["EXPIRES_IN"] = time.time() + token_data['expires_in']
-                logging.info('Token succesfully created')
-                return True
-            else:
-                logging.error(f'Failed to retrieve IAM token. Status code {response.status_code}')
-                return False
-        except:
-            logging.error('Failed to get request to retrive IAM token.')
-            return False
-    else:
-        return True
+# Проверяем и создаем, если это необходимо, IEM ток

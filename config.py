@@ -1,20 +1,17 @@
-from dotenv import load_dotenv
-
-from os import getenv
-
 import time
+import json
 
-load_dotenv()
+HOME_DIR = 'C:/Users/ps/PycharmProjects/hackathon'  # путь к папке с проектом
+LOGS = f'{HOME_DIR}/logging.txt'  # файл для логов
+DB_FILE = f'{HOME_DIR}/database.db'  # файл для базы данных
 
-BOT_TOKEN = getenv('BOT_TOKEN')
-FOLDER_ID = getenv('FOLDER_ID')
-IEM_TOKEN_INFO = {'IEM_TOKEN': 't1.9euelZqTis2QlZmVmM3Jz5uQy8aYi-3rnpWajsyalIyXjc2enYqSjY-RmJzl9PdyLjNN-e8SZH_v3fT3Ml0wTfnvEmR_783n9euelZrGl5GYls2Wxo2Zl5aSipyYz-_8xeuelZrGl5GYls2Wxo2Zl5aSipyYz73rnpWakpuJl4qRj42WlsbHmo_PnM613oac0ZyQko-Ki5rRi5nSnJCSj4qLmtKSmouem56LntKMng.zuvHgYMph1t4F_fYOCGqXHIGtEWctTNFvUBTTGupZzf5nHcjCHR3OzZiooAvxpgOcYOpLMYKZEtyjLzZ_2DZDA',
-                  'EXPIRES_IN': time.time() + 40000}
-ADMIN_ID = int(getenv('ADMIN_ID'))
+IAM_TOKEN = f'{HOME_DIR}/creds/iam_token.txt'  # файл для хранения iam_token
+FOLDER_ID = f'{HOME_DIR}/creds/folder_id.txt'  # файл для хранения folder_id
+BOT_TOKEN = f'{HOME_DIR}/creds/bot_token.txt'  # файл для хранения bot_token
 
 MAX_MODEL_TOKENS = 200
-MAX_USERS = 6
-MAX_STT_BLOCKS_PER_PERSON = 3
+MAX_USERS = 100
+MAX_STT_BLOCKS_PER_PERSON = 4
 MAX_GPT_TOKENS_PER_PERSON = 2000
 MAX_TTS_TOKENS_PER_PERSON = 2000
 MAX_GPT_TOKENS_PER_MESSAGE = 500
@@ -25,59 +22,12 @@ SYSTEM_PROMPT = '''Ты дружелюбный англичанин-ассист
 SYSTEM_PROMPT_TRANSLATION = '''Переведи сообщение на русский.'''
 
 
-class TTS:
-    headers = {'Authorization': f'Bearer {IEM_TOKEN_INFO["IEM_TOKEN"]}'}
-    url = getenv('TTS_URL')
-    data = {
-        'text': None,  # текст, который нужно преобразовать в голосовое сообщение
-        'lang': 'en-US',  # язык текста - русский
-        'voice': 'john',
-        'folderId': FOLDER_ID
-    }
-
-
-class STT_ENG:
-    # Указываем параметры запроса
-    params = "&".join([
-        "topic=general",  # используем основную версию модели
-        f"folderId={FOLDER_ID}",
-        "lang=en-US"  # распознаём голосовое сообщение на русском языке
-    ])
-    url = getenv('STT_URL') + params
-    headers = {'Authorization': f'Bearer {IEM_TOKEN_INFO["IEM_TOKEN"]}'}
-
-
-class STT_RU:
-    # Указываем параметры запроса
-    params = "&".join([
-        "topic=general",  # используем основную версию модели
-        f"folderId={FOLDER_ID}",
-        "lang=ru-RU"  # распознаём голосовое сообщение на русском языке
-    ])
-    url = getenv('STT_URL') + params
-    headers = {'Authorization': f'Bearer {IEM_TOKEN_INFO["IEM_TOKEN"]}'}
-
-
-class TOKENIZER:
-    url = getenv('TOKENIZER_URL')
-
-    headers = {
-        'Authorization': f'Bearer {IEM_TOKEN_INFO["IEM_TOKEN"]}',
-        'Content-Type': 'application/json'
-    }
-    data = {
-        "modelUri": f"gpt://{FOLDER_ID}/yandexgpt/latest",
-        "maxTokens": MAX_MODEL_TOKENS,
-        "messages": []
-    }
 
 
 class GPT:
-    url = getenv('GPT_URL')
 
-    headers = {
-        'Authorization': f'Bearer {IEM_TOKEN_INFO["IEM_TOKEN"]}',
-        'Content-Type': 'application/json'}
+    url = 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion'
+
 
     data = {
         "modelUri": f"gpt://{FOLDER_ID}/yandexgpt/latest",  # модель для генерации текста
@@ -97,4 +47,4 @@ class GPT:
 
 class IEM:
     headers = {"Metadata-Flavor": "Google"}
-    metadata_url = getenv('IEM_TOKEN_URL')
+    metadata_url = 'http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token'

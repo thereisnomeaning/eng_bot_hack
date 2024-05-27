@@ -1,13 +1,15 @@
 from validation import (is_stt_blocks_limit_per_person, is_stt_blocks_limit_per_message,
                         is_gpt_tokens_limit_per_person,
                         is_tts_symbol_limit_per_person)
-from gpt import check_and_create_IEM_token, gpt
-from config import IEM_TOKEN_INFO, SYSTEM_PROMPT, SYSTEM_PROMPT_TRANSLATION
+from gpt import gpt
+from creds import get_creds
+from config import SYSTEM_PROMPT, SYSTEM_PROMPT_TRANSLATION
 from speechkit import speech_to_text, text_to_speech
 from database import get_user_prompts, get_last_message_and_translation
 import logging
 
 logger = logging.getLogger('__main__')
+IEM_TOKEN, FOLDER_ID = get_creds()
 
 
 def stt(user_id, audio_file, duration, language):
@@ -20,9 +22,7 @@ def stt(user_id, audio_file, duration, language):
         logging.info(f'User_id sent too large voice message (over 30 second)')
         return 'LIMIT_LENGHT', 'Слишком длинное голосовое сообщение, должно быть меньше 30 секунд.'
 
-    if not check_and_create_IEM_token(IEM_TOKEN_INFO['EXPIRES_IN']):
-        logging.error(f'User_id {user_id} got an error accessing SpeachKit tts')
-        return 'IEM_ERROR', 'Произошла ошибка взаимодействия с нейронной сетью. Приносим свои извинения.'
+    iam_token, folder_id = get_creds()
 
     status, text = speech_to_text(audio_file, language)
 
@@ -40,8 +40,7 @@ def ttt(user_id, text, session_id, tokens_limit, action):
     if not tokens_limit:
         return 'LIMIT', 'Слишком длинное голосовое сообщение, укоротите его.'
 
-    if not check_and_create_IEM_token(IEM_TOKEN_INFO['EXPIRES_IN']):
-        return 'IEM_ERROR', 'Произошла ошибка взаимодействия с нейронной сетью. Приносим свои извинения.'
+    iam_token, folder_id = get_creds()
 
     if action == 'generating':
         prompt = get_user_prompts(user_id, session_id)
@@ -64,9 +63,7 @@ def tts(user_id, text):
         logging.info(f'User_id {user_id} ran out of tts tokens')
         return 'LIMITS', 'Ваши лимиты голосового общения исчерпаны.'
 
-    if not check_and_create_IEM_token(IEM_TOKEN_INFO['EXPIRES_IN']):
-        logging.error(f'Got an error extracting IEM TOKEN')
-        return 'IEM_ERROR', 'Произошла ошибка взаимодействия с нейронной сетью. Приносим свои извинения.'
+    iam_token, folder_id = get_creds()
 
     status, audio = text_to_speech(text)
 

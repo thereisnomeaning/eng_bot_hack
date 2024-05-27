@@ -1,14 +1,23 @@
 import requests
-
-from config import TTS, STT_ENG, STT_RU
+import json
+from config import IAM_TOKEN, FOLDER_ID
 
 
 def text_to_speech(text):
-    data = TTS.data.copy()
-    data['text'] = text
+    url = 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize'
+    with open(FOLDER_ID, 'r') as file:
+        data = {
+            'text': text,  # текст, который нужно преобразовать в голосовое сообщение
+            'lang': 'en-US',  # язык текста - русский
+            'voice': 'john',
+            'folderId': file.read()
+        }
 
-    response = requests.post(url=TTS.url, headers=TTS.headers, data=data)
-
+    with open(IAM_TOKEN, 'r') as f:
+        file_data = json.load(f)
+        iam_token = file_data["access_token"]
+        headers = {'Authorization': f'Bearer {iam_token}'}
+    response = requests.post(url=url, headers=headers, data=data)
     # Проверяем, не произошла ли ошибка при запросе
     if response.status_code == 200:
         return True, response.content  # возвращаем статус и аудио
@@ -17,10 +26,29 @@ def text_to_speech(text):
 
 
 def speech_to_text(text, language):
+    with open(IAM_TOKEN, 'r') as f:
+        file_data = json.load(f)
+        iam_token = file_data["access_token"]
+        headers = {'Authorization': f'Bearer {iam_token}'}
     if language == 'english':
-        response = requests.post(url=STT_ENG.url, headers=STT_ENG.headers, data=text)
+        with open(FOLDER_ID, 'r') as file:
+            params = "&".join([
+                "topic=general",  # используем основную версию модели
+                f"folderId={file.read()}",
+                "lang=en-US"  # распознаём голосовое сообщение на русском языке
+            ])
+        url = 'https://stt.api.cloud.yandex.net/speech/v1/stt:recognize?' + params
+        response = requests.post(url=url, headers=headers, data=text)
     elif language == 'russian':
-        response = requests.post(url=STT_RU.url, headers=STT_RU.headers, data=text)
+        with open(FOLDER_ID, 'r') as file:
+            params = "&".join([
+                "topic=general",  # используем основную версию модели
+                f"folderId={file.read()}",
+                "lang=ru-RU"  # распознаём голосовое сообщение на русском языке
+            ])
+            url = 'https://stt.api.cloud.yandex.net/speech/v1/stt:recognize?' + params
+
+        response = requests.post(url=url, headers=headers, data=text)
 
     decoded_data = response.json()
 

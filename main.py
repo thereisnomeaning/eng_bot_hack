@@ -1,7 +1,7 @@
 from telebot import TeleBot
 from telebot.types import Message, CallbackQuery, BotCommand, InputMediaAudio, InputMediaPhoto
-from config import BOT_TOKEN, SYSTEM_PROMPT, SYSTEM_PROMPT_TRANSLATION
-
+from config import SYSTEM_PROMPT, SYSTEM_PROMPT_TRANSLATION
+from creds import get_bot_token
 from validation import (is_user_amount_limit, is_gpt_tokens_limit_per_message)
 from database import (create_table_tests, add_user_to_tests_table, get_tests_info, is_user_in_tests, add_level_info,
                       create_table_prompts, create_table_limits, user_in_table, is_user_in_limits,
@@ -12,7 +12,8 @@ from database import (create_table_tests, add_user_to_tests_table, get_tests_inf
                       create_table_user_words, is_user_in_user_words, get_user_words_info, add_user_to_user_words,
                       add_level_user_words_info, create_table_all_words, is_user_in_all_words_table,
                       add_user_to_all_words_table, get_info_all_words, add_info_all_words, update_location_all_words,
-                      add_bound_for_repeating_words, update_info_all_words, get_all_user_info, update_repeat_words_id)
+                      add_bound_for_repeating_words, update_info_all_words, get_all_user_info, update_repeat_words_id,
+                      limit_reset_db)
 import logging
 from math import ceil
 from keyboards import menu_keyboard, inline_menu_keyboard
@@ -24,7 +25,12 @@ import json
 from vocab import translate
 import time
 from PIL import Image
-bot = TeleBot(token=BOT_TOKEN)
+bot = TeleBot(token=get_bot_token())
+
+
+@bot.message_handler(commands=['limit_reset'])
+def limit_reset(message: Message):
+    limit_reset_db(message.from_user.id)
 
 
 # Сюда отправляется пользователь, когда он хочет добавить свое слово в словарь для повторения.

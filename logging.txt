@@ -1,2 +1,1 @@
-2024-05-26 15:23:34,442 - root - INFO - Tables are created
-2024-05-26 15:23:41,752 - root - INFO - New user_id 719301881 just connected
+2024-05-27 17:04:43,873 FILE: main.py IN: <module> MESSAGE: Tables are created

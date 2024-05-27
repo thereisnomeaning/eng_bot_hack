@@ -31,8 +31,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
-      <object connection-id="30c22560-0ebd-46ef-a602-dae817ab29f2" object-ref="schemas/main/tables/all_user_words" />
-      <object connection-id="30c22560-0ebd-46ef-a602-dae817ab29f2" object-ref="schemas/main/tables/limits" />
+      <object connection-id="d25ecc6c-7a0b-40d8-98f0-290ea2407164" object-ref="schemas/main/tables/limits" />
     </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
@@ -53,6 +52,26 @@
     </filter-actions>
     <filter-actions connection-id="4fe75073-ee50-4acd-a9cc-d7faee41d86c" dataset="main.limits" active-filter-id="e7089009-c487-4fb3-beb4-7297cf457de6">
       <filter id="e7089009-c487-4fb3-beb4-7297cf457de6" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="d25ecc6c-7a0b-40d8-98f0-290ea2407164" dataset="main.prompts" active-filter-id="f4be016b-b4b9-4892-bea6-195f843302a2">
+      <filter id="f4be016b-b4b9-4892-bea6-195f843302a2" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="d25ecc6c-7a0b-40d8-98f0-290ea2407164" dataset="main.tests" active-filter-id="375a1c33-a600-45c8-9a9c-ece736058862">
+      <filter id="375a1c33-a600-45c8-9a9c-ece736058862" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="d25ecc6c-7a0b-40d8-98f0-290ea2407164" dataset="main.limits" active-filter-id="c8877aa3-2924-415c-a937-ed6a327c2e39">
+      <filter id="c8877aa3-2924-415c-a937-ed6a327c2e39" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="d25ecc6c-7a0b-40d8-98f0-290ea2407164" dataset="main.all_user_words" active-filter-id="0d7f1903-679c-442c-93f3-a58f2a0398e5">
+      <filter id="0d7f1903-679c-442c-93f3-a58f2a0398e5" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="is not null" value="" active="true" />
       </filter>
     </filter-actions>
